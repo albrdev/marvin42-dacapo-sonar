@@ -13,6 +13,7 @@
 #define dirA 12
 #define dirB 13
 
+#define ROTATION_SPEED  5
 SM_42BYG011_25 stepMotor(dirA, dirB, brakeA, brakeB, pwmA, pwmB);
 
 HC_SR04 sonicSensor[2] = { HC_SR04(A2, A3), HC_SR04(A4, A5) };
@@ -21,7 +22,7 @@ HC_SR04 sonicSensor[2] = { HC_SR04(A2, A3), HC_SR04(A4, A5) };
 #define HC06_TX 5
 HC06 bluetooth(HC06_RX, HC06_TX);
 
-Timer transmitTimer(10UL, true);
+Timer transmitTimer(100UL, true);
 
 //const float ROTATION_MAX = 360.0;
 //const float ROTATION_MAX = 270.0;
@@ -68,7 +69,7 @@ void setupBluetooth(void)
         delay(500UL);
     }
 
-    delay(500UL);
+    //delay(500UL);
     Serial.print("Version: ");
     const char* version = bluetooth.GetVersion();
     if(version != nullptr)
@@ -80,7 +81,7 @@ void setupBluetooth(void)
         Serial.println("N/A");
     }
 
-    delay(500UL);
+    //delay(500UL);
     Serial.println("Setting baud rate");
 
     while(!bluetooth.SetBaudRate(HC06::BR_9600))
@@ -89,7 +90,7 @@ void setupBluetooth(void)
         delay(500UL);
     }
 
-    delay(500UL);
+    //delay(500UL);
     Serial.println("Setting PIN");
     while(!bluetooth.SetPIN("1357"))
     {
@@ -97,7 +98,7 @@ void setupBluetooth(void)
         delay(500UL);
     }
 
-    delay(500UL);
+    //delay(500UL);
     Serial.println("Setting name");
     while(!bluetooth.SetName("Marvin42-Sonar"))
     {
@@ -110,20 +111,19 @@ void setupBluetooth(void)
 
 void setup(void)
 {
-    delay(2500);
     Serial.begin(9600, SERIAL_8N1);
     Serial.println("Initializing...");
     Serial.flush();
-    delay(2500);
+    //delay(2500);
 
     setupBluetooth();
     //bluetooth.begin(9600);
 
     Serial.println("Initializing stepper motor...");
     stepMotor.Begin();
-    stepMotor.setSpeed(10);
+    stepMotor.setSpeed(ROTATION_SPEED);
     stepMotor.SetOnEndRotationEvent(restartRotation);
-    stepMotor.Rotate(ROTATION_MAX / 2.0);
+    stepMotor.Rotate(ROTATION_MAX / 2.0f);
 
     transmitTimer.SetTriggerCallback(transmitData);
 
