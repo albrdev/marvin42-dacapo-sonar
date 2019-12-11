@@ -13,7 +13,7 @@
 #define dirA 12
 #define dirB 13
 
-#define ROTATION_SPEED  5
+#define ROTATION_SPEED 25
 SM_42BYG011_25 stepMotor(dirA, dirB, brakeA, brakeB, pwmA, pwmB);
 
 HC_SR04 sonicSensor[2] = { HC_SR04(A2, A3), HC_SR04(A4, A5) };
